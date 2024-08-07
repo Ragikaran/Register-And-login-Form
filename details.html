@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Details</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+
+    <div class="card shadow-sm" style="width: 100%; max-width: 600px;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Form Details</h2>
+            <div id="details"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript to parse URL parameters and display data -->
+    <script>
+        function getQueryParams() {
+            const query = window.location.search.substring(1);
+            const pairs = query.split('&');
+            const result = {};
+            pairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                result[decodeURIComponent(key)] = decodeURIComponent(value);
+            });
+            return result;
+        }
+
+        function capitalizeName(name) {
+            if (!name) return '';
+            return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+        }
+
+        function displayDetails(data) {
+            const detailsDiv = document.getElementById('details');
+            let fullName = `${capitalizeName(data.firstName)} ${capitalizeName(data.lastName)}`.trim();
+            let html = '<ul class="list-group">';
+            html += `<li class="list-group-item"><strong>FULL NAME:</strong> ${fullName}</li>`;
+            for (const key in data) {
+                if (data.hasOwnProperty(key) && key !== 'firstName' && key !== 'lastName') {
+                    html += `<li class="list-group-item"><strong>${key.replace(/([A-Z])/g, ' $1').toUpperCase()}:</strong> ${data[key]}</li>`;
+                }
+            }
+            html += '</ul>';
+            detailsDiv.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const queryParams = getQueryParams();
+            displayDetails(queryParams);
+        });
+    </script>
+</body>
+</html>
